@@ -1,19 +1,13 @@
 # Host Marbles Locally:
 
 ### <a name="runlocal"></a>Run Marbles
- Finally lets install marble's npm dependencies.
+Lets do the very last setup for marbles.
 
-1. Open a command prompt/terminal and navigate to the marbles directory.
-1. In the command prompt/terminal type:
+1. Finally lets install marble's npm dependencies. Open a command prompt/terminal and browse to the root of this project.
+1. In the command prompt type:
 	
 		> npm install gulp -g
 		> npm install
-
-1. Almost there! 
-	-If you are using a local network use this command:
-		> gulp marbles3
-
-	- If you are using a bluemix network, use this command:
 		> gulp marbles1
 		
 1. If all goes well you should see this message in the console:
@@ -39,4 +33,4 @@
 
 ![](/doc_images/localhost4.png)
 		
-1. Marbles is all setup! Now [continue the tutorial](../README.md#use).
+1. Marbles is all setup! Now [continue the tutorial](./tutorial_start_here.md#use).
