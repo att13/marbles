@@ -232,6 +232,22 @@ label {
 strong {
   font-weight: 600; }
 
+#rightEverything {
+  transition: width 3s;
+  min-width: 765px; }
+
+.rightEverythingOpened {
+  width: calc(100% - $auditSize);
+  left: 333px;
+  position: absolute; }
+
+#leftEverything {
+  display: none;
+  width: 333px;
+  left: 0%;
+  position: fixed;
+  height: 100%; }
+
 /*Main Layout*/
 #navPanel {
   height: 60px;
@@ -540,7 +556,7 @@ strong {
   display: none;
   background: #000;
   opacity: .85;
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 0;
   width: 100%;
@@ -1066,57 +1082,37 @@ strong {
 
 #auditWrap {
   position: absolute;
-  bottom: 60px;
-  border-top: #646B73 solid 1px;
   width: 100%;
-  border: 1px #fff solid;
-  border-left: 0;
-  border-right: 0;
   background: #646B73;
-  color: #fff; }
+  color: #fff;
+  height: 100%; }
 
 #auditLegend {
   color: #E5EBEF;
-  padding: 0 0 10px 0;
+  padding: 20px 0 15px 0;
   bottom: 13px;
   font-size: 18px; }
 
 #auditContentWrap {
   display: none;
-  padding: 10px;
-  max-height: 210px;
-  min-height: 145px;
   overflow-x: hidden;
-  overflow-y: auto; }
+  overflow-y: auto;
+  height: 100%; }
 
 #marbleIdWrap {
   font-size: 12px;
   margin-bottom: 15px; }
 
-#auditHandle {
-  width: 50px;
-  background: #fff;
-  position: absolute;
-  left: 48.5%;
-  top: -16px;
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
-  color: #000;
-  text-align: center;
-  cursor: pointer; }
-
 .txHistoryWrap {
   display: inline-block;
   vertical-align: bottom;
-  width: calc(99% - 175px);
-  margin-left: 175px; }
+  margin-top: 35px; }
 
 .leftTxWrap {
-  width: 175px;
+  width: 100%;
   display: inline-block;
   vertical-align: top;
-  text-align: center;
-  position: fixed; }
+  text-align: center; }
 
 .biggerLeft {
   margin-bottom: 50px; }
@@ -1126,11 +1122,10 @@ strong {
   vertical-align: bottom;
   font-size: 14px;
   display: inline-block;
-  margin-left: 20px;
-  padding-right: 20px;
-  height: 96px;
+  margin-left: 30px;
   left: 100%;
-  margin-top: 5px; }
+  margin-top: 5px;
+  margin-bottom: 10px; }
 
 .marbleLegend {
   width: 85px;
@@ -1154,6 +1149,9 @@ strong {
 #marbleIdWrap {
   font-weight: 700; }
 
+#marbleId {
+  margin-top: 10px; }
+
 .auditMarble {
   line-height: 75px;
   font-size: 30px;
@@ -1170,11 +1168,40 @@ strong {
   font-weight: 100;
   color: #a1a7ad;
   margin-top: 55px;
-  text-align: center;
-  margin-left: -150px; }
+  text-align: center; }
 
 .auditingMarble {
   border-color: #2EB9D6; }
+
+#auditClose {
+  position: absolute;
+  top: 10px;
+  right: 25px;
+  cursor: pointer; }
+
+#auditClose:hover {
+  color: #2EB9D6; }
+
+.auditMarble:hover {
+  border-color: transparent !important; }
+
+#auditButton {
+  position: fixed;
+  left: -22px;
+  background: #646B73;
+  color: #fff;
+  transform: rotate(90deg);
+  padding: 5px 20px;
+  top: 50%;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  width: 30px;
+  text-align: center;
+  cursor: pointer;
+  transition: all .25s linear; }
+
+#auditButton:hover {
+  color: #39424D; }
 
 #blockWrap {
   position: relative;
@@ -1240,7 +1267,8 @@ strong {
   margin-left: -60px;
   opacity: 0;
   transition: opacity 1s;
-  line-height: 16px; }
+  line-height: 16px;
+  z-index: 9; }
 
 /* Tooltip arrow */
 .tooltip .tooltiptext::after {

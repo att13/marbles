@@ -25,7 +25,10 @@ module.exports = function (g_options, logger) {
 					ordered_hook: function(error, res){},	<optional>
 					cc_function: "function_name",
 					cc_args: ["argument 1"],
-					pem: 'complete tls certificate'			<optional>
+					peer_tls_opts: {
+						pem: 'complete tls certificate',					<optional>
+						common_name: 'common name used in pem certificate' 	<optional>
+					}
 		}
 	*/
 	invoke_cc.invoke_chaincode = function (obj, options, cb) {
@@ -52,7 +55,8 @@ module.exports = function (g_options, logger) {
 			logger.debug('[fcw] listening to event url', options.event_url);
 			eventhub = new EventHub();
 			eventhub.setPeerAddr(options.event_url, {
-				pem: options.pem
+				pem: options.peer_tls_opts.pem,
+				'ssl-target-name-override': options.peer_tls_opts.common_name		//can be null if cert matches hostname
 			});
 			eventhub.connect();
 		} else {
@@ -90,13 +94,13 @@ module.exports = function (g_options, logger) {
 
 						// Wait for tx committed event
 						eventhub.registerTxEvent(request.txId.toString(), (tx, code) => {
-							logger.info('[fcw] The chaincode transaction has been committed, success:', code);
+							logger.info('[fcw] The chaincode transaction has been committed, success?:', code);
 							clearTimeout(watchdog);
 
 							if (code !== 'VALID') {
 								if (cb && !cbCalled) {
 									cbCalled = true;
-									return cb(code);					//pass error back
+									return cb(common.format_error_msg('Commit code: ' + code));//pass error back
 								}
 								else return;
 							} else {

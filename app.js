@@ -48,8 +48,7 @@ if (process.env.VCAP_APPLICATION) {
 
 // --- Pathing and Module Setup --- //
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-app.engine('.html', require('jade').__express);
+app.set('view engine', 'pug');
 app.use(compression());
 app.use(cookieParser());
 app.use(serve_static(path.join(__dirname, 'public')));
@@ -60,10 +59,8 @@ app.use(cors());
 //---------------------
 // Cache Busting Hash
 //---------------------
-var bust_js = require('./busters_js.json');
-var bust_css = require('./busters_css.json');
-process.env.cachebust_js = bust_js['public/js/singlejshash'];			//i'm just making 1 hash against all js for easier jade implementation
-process.env.cachebust_css = bust_css['public/css/singlecsshash'];		//i'm just making 1 hash against all css for easier jade implementation
+process.env.cachebust_js = Date.now();			//i'm just making 1 hash against all js for easier pug implementation
+process.env.cachebust_css = Date.now();			//i'm just making 1 hash against all css for easier pug implementation
 logger.debug('cache busting hash js', process.env.cachebust_js, 'css', process.env.cachebust_css);
 
 // ============================================================================================================================
@@ -102,9 +99,9 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 process.env.NODE_ENV = 'production';
 server.timeout = 240000;																							// Ta-da.
 console.log('------------------------------------------ Server Up - ' + host + ':' + port + ' ------------------------------------------');
-if (process.env.PRODUCTION) logger.debug('Running using Production settings');
-else logger.debug('Running using Developer settings');
-
+process.on('uncaughtException', function (err) {
+	logger.error('Caught exception: ', err.stack);			//don't ever give up
+});
 // ============================================================================================================================
 // 														Warning
 // ============================================================================================================================
@@ -131,6 +128,7 @@ if (hash === helper.getHash()) {
 	console.log('');
 	logger.debug('Detected that we have launched successfully before');
 	logger.debug('Welcome back - Initiating start up\n\n');
+	process.env.app_state = 'start_waiting';
 	process.env.app_first_setup = 'no';
 	enroll_admin(1, function (e) {
 		if (e == null) {
@@ -355,7 +353,7 @@ function all_done() {
 
 	logger.debug('hash is', helper.getHash());
 	helper.write({ hash: helper.getHash() });							//write state file so we know we started before
-	ws_server.check_for_updates(null);								//call the periodic task to get the state of everything
+	ws_server.check_for_updates(null);									//call the periodic task to get the state of everything
 }
 
 //message to client to communicate where we are in the start up
@@ -455,7 +453,7 @@ function setupWebSocket() {
 		var i = 0;
 		wss.clients.forEach(function each(client) {
 			try {
-				logger.debug('[ws] broadcasting to client', (++i), data.msg);
+				logger.debug('[ws] broadcasting to clients. ', (++i), data.msg);
 				client.send(JSON.stringify(data));
 			}
 			catch (e) {

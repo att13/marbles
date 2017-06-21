@@ -1,5 +1,26 @@
 @import 'color_theme';
 
+$auditSize: 333px;
+
+#rightEverything{
+	transition: width 3s;
+	min-width: 765px;
+}
+
+.rightEverythingOpened{
+	width: calc(100% - $auditSize);
+	left: $auditSize;
+	position: absolute;
+}
+
+#leftEverything{
+	display: none;
+	width: $auditSize;
+	left: 0%;
+	position: fixed;
+	height: 100%;
+}
+
 /*Main Layout*/
 #navPanel{
 	height:60px;
@@ -324,7 +345,7 @@
 	display:none;
 	background: #000;
 	opacity: .85;
-	position: absolute;
+	position: fixed;
 	top: 0;
 	right: 0;
 	width: 100%;

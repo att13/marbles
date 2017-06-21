@@ -1,6 +1,6 @@
 /* global $, window, document */
 /* global toTitleCase, connect_to_server, refreshHomePanel, closeNoticePanel, openNoticePanel, show_tx_step, marbles*/
-/* global fixCss, pendingTxDrawing:true */
+/* global pendingTxDrawing:true */
 /* exported record_company, autoCloseNoticePanel, start_up, block_ui_delay*/
 var ws = {};
 var bgcolors = ['whitebg', 'blackbg', 'redbg', 'greenbg', 'bluebg', 'purplebg', 'pinkbg', 'orangebg', 'yellowbg'];
@@ -49,7 +49,7 @@ $(document).on('ready', function () {
 			for (var i in bgcolors) $('.createball').removeClass(bgcolors[i]);		//reset
 			$('.createball').css('border', '2px dashed #fff');						//reset
 		});
-		
+
 		return false;
 	});
 
@@ -230,10 +230,9 @@ $(document).on('ready', function () {
 		var marble_id = $(that).attr('id');
 		$('.auditingMarble').removeClass('auditingMarble');
 
-		if(!auditingMarble || marbles[marble_id].id != auditingMarble.id) {//different marble than before!
-			for(var x in pendingTxDrawing) clearTimeout(pendingTxDrawing[x]);
+		if (!auditingMarble || marbles[marble_id].id != auditingMarble.id) {//different marble than before!
+			for (var x in pendingTxDrawing) clearTimeout(pendingTxDrawing[x]);
 			$('.txHistoryWrap').html('');										//clear
-			fixCss();
 		}
 
 		auditingMarble = marbles[marble_id];
@@ -247,6 +246,9 @@ $(document).on('ready', function () {
 			for (var i in bgcolors) $('.auditMarble').removeClass(bgcolors[i]);	//reset
 			$('.auditMarble').addClass(color.toLowerCase() + 'bg');
 
+			$('#rightEverything').addClass('rightEverythingOpened');
+			$('#leftEverything').fadeIn();
+
 			var obj2 = {
 				type: 'audit',
 				marble_id: marble_id
@@ -255,23 +257,26 @@ $(document).on('ready', function () {
 		}
 	}
 
-	$('#auditHandle').click(function () {
-		if ($('#auditContentWrap').is(':visible')) {
-			$('#auditContentWrap').slideUp(500);
-			$('.auditingMarble').removeClass('auditingMarble');												//reset
-			for(var x in pendingTxDrawing) clearTimeout(pendingTxDrawing[x]);
-			setTimeout(function(){
-				$('.txHistoryWrap').html('<div class="auditHint">Click a Marble to Audit Its Transactions</div>');//clear
-			}, 750);
-			$('#marbleId').html('-');
-			fixCss();
-			auditingMarble = null;
-		}
-		else {
-			//$('#auditContentWrap').fadeIn(300);
-			$('#auditContentWrap').slideDown();
-			$('#auditHandle').children().removeClass('fa-angle-up').addClass('fa-angle-down');
-		}
+	$('#auditClose').click(function () {
+		$('#auditContentWrap').slideUp(500);
+		$('.auditingMarble').removeClass('auditingMarble');												//reset
+		for (var x in pendingTxDrawing) clearTimeout(pendingTxDrawing[x]);
+		setTimeout(function () {
+			$('.txHistoryWrap').html('<div class="auditHint">Click a Marble to Audit Its Transactions</div>');//clear
+		}, 750);
+		$('#marbleId').html('-');
+		auditingMarble = null;
+
+		setTimeout(function () {
+			$('#rightEverything').removeClass('rightEverythingOpened');
+		}, 500);
+		$('#leftEverything').fadeOut();
+	});
+
+	$('#auditButton').click(function () {
+		$('#auditContentWrap').fadeIn();
+		$('#rightEverything').addClass('rightEverythingOpened');
+		$('#leftEverything').fadeIn();
 	});
 });
 
